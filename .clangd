@@ -1,0 +1,4 @@
+CompileFlags:
+  Add:
+    - "-I C:/msys64/mingw64/include/c++/5.2.0"
+    

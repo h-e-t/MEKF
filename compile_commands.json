@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/emmat/Desktop/Year5/MEKF/build",
+  "command": "g++  -IC:\\Users\\emmat\\Desktop\\Year5\\MEKF\\include -std=gnu++17 -o CMakeFiles\\tester.dir\\tests\\main.cpp.obj -c C:\\Users\\emmat\\Desktop\\Year5\\MEKF\\tests\\main.cpp -I C:\\msys64\\mingw64\\include\\c++\\15.2.0"  ,
+  "file": "C:/Users/emmat/Desktop/Year5/MEKF/tests/main.cpp",
+  "output": "CMakeFiles/tester.dir/tests/main.cpp.obj"
+}
+]
