@@ -11,19 +11,32 @@
 #include <string>
 #include <vector>
 
-class ETL {
-  std::string dataset;
-  std::string delimiter;
-  bool header;
+using std::cout, std::endl;
 
-public:
-  ETL(std::string data, std::string separator, bool head)
-      : dataset(data), delimiter(separator), header(head) {}
+class ETL
+{
+    std::string dataset;
+    std::string delimiter;
+    bool header;
 
-  std::vector<std::vector<std::string>> readCSV();
+  public:
+    ETL(std::string data, std::string separator, bool head)
+        : dataset(data), delimiter(separator), header(head)
+    {
+    }
 
-  Eigen::MatrixXd CSVtoEigen(std::vector<std::vector<std::string>> dataset,
-                             int rows, int cols);
+    Eigen::MatrixXd readCSV();
+
+    // Eigen::MatrixXd CSVtoEigen(std::vector<std::vector<std::string>> dataset);
+
+    auto Mean(Eigen::MatrixXd data) -> decltype(data.colwise().mean().eval());
+
+    auto Std(Eigen::MatrixXd data)
+        -> decltype(((data.array().square().colwise().sum()) / (data.rows() - 1))
+                        .sqrt()
+                        .eval());
+
+    Eigen::MatrixXd Normalize(Eigen::MatrixXd data, bool normalizeTarget);
 };
 
 #endif

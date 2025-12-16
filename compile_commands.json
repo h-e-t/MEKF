@@ -1,8 +1,20 @@
 [
 {
-  "directory": "C:/Users/emmat/Desktop/Year5/MEKF/build",
-  "command": "g++  -IC:\\Users\\emmat\\Desktop\\Year5\\MEKF\\include -std=gnu++17 -o CMakeFiles\\tester.dir\\tests\\main.cpp.obj -c C:\\Users\\emmat\\Desktop\\Year5\\MEKF\\tests\\main.cpp -I C:\\msys64\\mingw64\\include\\c++\\15.2.0"  ,
-  "file": "C:/Users/emmat/Desktop/Year5/MEKF/tests/main.cpp",
-  "output": "CMakeFiles/tester.dir/tests/main.cpp.obj"
+  "directory": "C:/Users/emmat/Desktop/PERSONAL/RocketDevelopment/MEKF/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE  @CMakeFiles/tester.dir/includes_CXX.rsp -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -Wall -Wextra -Wpedantic -o CMakeFiles\\tester.dir\\src\\ETL.cpp.obj -c C:\\Users\\emmat\\Desktop\\PERSONAL\\RocketDevelopment\\MEKF\\src\\ETL.cpp",
+  "file": "C:/Users/emmat/Desktop/PERSONAL/RocketDevelopment/MEKF/src/ETL.cpp",
+  "output": "CMakeFiles/tester.dir/src/ETL.cpp.obj"
+},
+{
+  "directory": "C:/Users/emmat/Desktop/PERSONAL/RocketDevelopment/MEKF/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE  @CMakeFiles/tester.dir/includes_CXX.rsp -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -Wall -Wextra -Wpedantic -o CMakeFiles\\tester.dir\\src\\main.cpp.obj -c C:\\Users\\emmat\\Desktop\\PERSONAL\\RocketDevelopment\\MEKF\\src\\main.cpp",
+  "file": "C:/Users/emmat/Desktop/PERSONAL/RocketDevelopment/MEKF/src/main.cpp",
+  "output": "CMakeFiles/tester.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/emmat/Desktop/PERSONAL/RocketDevelopment/MEKF/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE  @CMakeFiles/tester.dir/includes_CXX.rsp -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -Wall -Wextra -Wpedantic -o CMakeFiles\\tester.dir\\src\\mekf.cpp.obj -c C:\\Users\\emmat\\Desktop\\PERSONAL\\RocketDevelopment\\MEKF\\src\\mekf.cpp",
+  "file": "C:/Users/emmat/Desktop/PERSONAL/RocketDevelopment/MEKF/src/mekf.cpp",
+  "output": "CMakeFiles/tester.dir/src/mekf.cpp.obj"
 }
 ]
