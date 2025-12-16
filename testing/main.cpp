@@ -39,8 +39,11 @@ int main()
     // CSVLogger statelogger("../logs/GravBaroUpdatestateLog.csv");
     // CSVLogger covlogger("../logs/GravBaroUpdatecovLog.csv");
 
-    CSVLogger statelogger("../logs/propagation_grav_baro_mag_state.csv");
-    CSVLogger covlogger("../logs/propagation_grav_baro_mag_cov.csv");
+    // CSVLogger statelogger("../logs/propagation_grav_baro_mag_state.csv");
+    // CSVLogger covlogger("../logs/propagation_grav_baro_mag_cov.csv");
+
+    CSVLogger statelogger("../logs/propagation_grav_baro_mag_gps_state.csv");
+    CSVLogger covlogger("../logs/propagation_grav_baro_mag_gps_cov.csv");
 
     Matrix<float, 3, 1> gyroMeas;
     Matrix<float, 3, 1> accMeas;
@@ -53,8 +56,6 @@ int main()
     IMUSensorDefinition nativeSuite = defaults::DefaultIMU();
     MEKF nav(nativeSuite);
 
-    // accMeas << 9.81, 0, 0;
-    // nav.updateWithGravity(accMeas);
 
     for (int i = 0; i < dataset.rows(); i++)
     {
@@ -80,6 +81,11 @@ int main()
         if ((i + 1) % 15 == 0)
         {
             nav.updateWithBarometer(-posMeas(2));
+        }
+
+        if ((i + 1) % 80 == 0)
+        {
+            nav.updateWithGPS(posMeas, velMeas);
         }
     }
 

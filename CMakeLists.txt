@@ -26,6 +26,7 @@ file(GLOB_RECURSE MEKF_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 
 # Single executable target 
 add_executable(tester
+    ${CMAKE_SOURCE_DIR}/testing/main.cpp
     ${MEKF_SOURCES}
 )
 

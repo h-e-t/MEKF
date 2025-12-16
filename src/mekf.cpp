@@ -136,8 +136,6 @@ void MEKF::updateWithBarometer(float altitude)
 
 void MEKF::updateWithMagnetometer(Matrix<float, 3, 1> magneticMeasurement)
 {
-    // float declination = -0.0875;
-
     Matrix<float, 16, 1> &state = vehicleState_.state;
     Matrix<float, 15, 15> &cov = vehicleState_.covariance;
 
@@ -159,12 +157,6 @@ void MEKF::updateWithMagnetometer(Matrix<float, 3, 1> magneticMeasurement)
 
     H.diagonal() << 0, 0, 1;
 
-    // cout << "del beta" << endl << del_beta;
-    // cout << "attitude covariance" << endl << cov.block<3, 3>(0, 0) << endl;
-    // cout << "cov * H" << endl << cov.block<3, 3>(0, 0) * H << endl;
-    // cout << "H cov H.T" << endl << H * cov.block<3, 3>(0, 0) * H.transpose() << endl;
-    // cout << "Mag cov" << endl << IMU_.magnetometerCov << endl;
-
     MatrixXf Kgain =
         cov.block<3, 3>(0, 0) * H *
         (IMU_.magnetometerCov + H * cov.block<3, 3>(0, 0) * H.transpose()).inverse();
@@ -176,6 +168,44 @@ void MEKF::updateWithMagnetometer(Matrix<float, 3, 1> magneticMeasurement)
             .coeffsScalarFirst();
 
     cov.block<3, 3>(0, 0) = (I3 - Kgain) * cov.block<3, 3>(0, 0);
+
+    checkFloor();
+};
+
+void MEKF::updateWithGPS(Matrix<float, 3, 1> position, Matrix<float, 3, 1> velocity)
+{
+    Matrix<float, 16, 1> &state = vehicleState_.state;
+    Matrix<float, 15, 15> &cov = vehicleState_.covariance;
+
+    Quaternionf currentAttitude(state(0), state(1), state(2), state(3));
+
+    Matrix<float, 3, 3> I3 = Matrix<float, 3, 3>::Identity();
+    Matrix<float, 15, 15> I15 = Matrix<float, 15, 15>::Identity();
+
+    Matrix<float, 6, 15> H = Matrix<float, 6, 15>::Zero();
+    Matrix<float, 15, 1> delX = Matrix<float, 15, 1>::Zero();
+
+    Matrix<float, 6, 1> del_vx = Matrix<float, 6, 1>::Zero();
+
+    // ---- BLOCK (1, 2) ---- Velocity Block
+    H.block<3, 3>(0, 3) = I3;
+
+    // ---- BLOCK (2, 3) ---- Position Block
+    H.block<3, 3>(1, 6) = I3;
+
+    // velocity error
+    del_vx.block<3, 1>(0, 0) = velocity - state.block<3, 1>(4, 0);
+
+    // position error
+    del_vx.block<3, 1>(3, 0) = position - state.block<3, 1>(7, 0);
+
+    MatrixXf Kgain = cov * H.transpose() *
+                     (H * cov * H.transpose() + IMU_.GPSNoiseCovariance).inverse();
+
+    delX += Kgain * del_vx;
+
+    cov = (I15 - Kgain * H) * cov * (I15 - Kgain * H).transpose() +
+          Kgain * IMU_.GPSNoiseCovariance * Kgain.transpose();
 
     checkFloor();
 };
@@ -192,9 +222,6 @@ void MEKF::propagate(Matrix<float, 3, 1> gyroMeasurement,
     // Quaternion Propagation
     currentAttitude =
         currentAttitude * quatExp(Quaternionf(0, dt * gyroMeasurement / 2.0f));
-
-    // Outputs attitude in yaw pitch roll
-    // cout << rad2deg(currentAttitude.toRotationMatrix().canonicalEulerAngles(2, 1, 0));
 
     // body to inertial rotation matrix
     Matrix<float, 3, 3> DCM_be = currentAttitude.toRotationMatrix();

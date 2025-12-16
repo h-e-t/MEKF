@@ -55,6 +55,9 @@ inline IMUSensorDefinition DefaultIMU()
     d.gpsPosNoiseCov = I3 * 2.25; // e.g. 1.5 m std dev
     d.gpsVelNoiseCov = I3 * 0.25; // e.g. 0.5 m/s std dev
 
+    d.GPSNoiseCovariance.diagonal().block<3, 1>(0, 0) = d.gpsVelNoiseCov.diagonal();
+    d.GPSNoiseCovariance.diagonal().block<3, 1>(3, 0) = d.gpsPosNoiseCov.diagonal();
+
     // Barometer variance (scalar), units depend on how barometer data is used (e.g.
     // meters)
     d.barometerCov = .5f; // 1 meter variance
