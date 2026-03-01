@@ -1,5 +1,6 @@
 #include "Eigen/Core"
 #include "Eigen/Geometry"
+#include "Eigen/src/Geometry/Quaternion.h"
 #include <cmath>
 #include <iostream>
 #include <mekf.hpp>
@@ -18,7 +19,7 @@ MEKF::MEKF(IMUSensorDefinition IMU)
       estimatorMagneticField(27.550, -2.4169, -16.0849)
 {
     vehicleState_.state = Matrix<float, 16, 1>();
-    vehicleState_.state << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+    vehicleState_.state << 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
     vehicleState_.covariance.setZero();
     vehicleState_.covariance.diagonal() << 1, 1, 1, 0.1000, 0.1000, 0.1000, 0.1000,
@@ -51,8 +52,8 @@ void MEKF::updateWithGravity(Matrix<float, 3, 1> accelerometerMeasurement)
 
     Matrix<float, 16, 1> &state = vehicleState_.state;
     Matrix<float, 15, 15> &cov = vehicleState_.covariance;
-
-    Quaternionf currentAttitude(state(0), state(1), state(2), state(3));
+    
+    Quaternionf currentAttitude(state(3), state(0), state(1), state(2));
 
     Matrix<float, 15, 1> delX;
     Matrix<float, 3, 15> H;
@@ -82,9 +83,9 @@ void MEKF::updateWithGravity(Matrix<float, 3, 1> accelerometerMeasurement)
     cov = (I15 - Kgain * H) * cov;
 
     // Attitude Update
+    Matrix<float, 4,1> newAttitude= 
     state.block<4, 1>(0, 0) =
-        (currentAttitude * Quaternionf(1, 0, delX(1) / 2.0f, delX(2) / 2.0f))
-            .coeffsScalarFirst();
+        (currentAttitude * Quaternionf(1, 0, delX(1) / 2.0f, delX(2) / 2.0f)).coeffs();
 
     // TODO: Consider updating all states
     // Partial Update (only to gyro and accel bias)
@@ -139,7 +140,7 @@ void MEKF::updateWithMagnetometer(Matrix<float, 3, 1> magneticMeasurement)
     Matrix<float, 16, 1> &state = vehicleState_.state;
     Matrix<float, 15, 15> &cov = vehicleState_.covariance;
 
-    Quaternionf currentAttitude(state(0), state(1), state(2), state(3));
+    Quaternionf currentAttitude(state(3), state(0), state(1), state(2));
 
     Matrix<float, 3, 1> estimated_mag = Matrix<float, 3, 1>::Zero();
     Matrix<float, 3, 1> del_beta = Matrix<float, 3, 1>::Zero();
@@ -165,7 +166,7 @@ void MEKF::updateWithMagnetometer(Matrix<float, 3, 1> magneticMeasurement)
 
     state.block<4, 1>(0, 0) =
         (currentAttitude * Quaternionf(1, alpha(0), alpha(1), alpha(2)))
-            .coeffsScalarFirst();
+            .coeffs();
 
     cov.block<3, 3>(0, 0) = (I3 - Kgain) * cov.block<3, 3>(0, 0);
 
@@ -217,11 +218,12 @@ void MEKF::propagate(Matrix<float, 3, 1> gyroMeasurement,
     Matrix<float, 16, 1> &state = vehicleState_.state;
     Matrix<float, 15, 15> &cov = vehicleState_.covariance;
 
-    Quaternionf currentAttitude(state(0), state(1), state(2), state(3));
+    Quaternionf currentAttitude(state(3), state(0), state(1), state(2));
 
     // Quaternion Propagation
+    Matrix<float, 3,1> gyro_step = dt * gyroMeasurement / 2.0f;
     currentAttitude =
-        currentAttitude * quatExp(Quaternionf(0, dt * gyroMeasurement / 2.0f));
+        currentAttitude * quatExp(Quaternionf(0, gyro_step(0),gyro_step(1),gyro_step(2)));
 
     // body to inertial rotation matrix
     Matrix<float, 3, 3> DCM_be = currentAttitude.toRotationMatrix();
@@ -238,7 +240,7 @@ void MEKF::propagate(Matrix<float, 3, 1> gyroMeasurement,
     cov = STM * cov * STM.transpose() + calculateProcessCovariance(dt);
 
     // Updating attitude
-    state.block<4, 1>(0, 0) = currentAttitude.coeffsScalarFirst().normalized();
+    state.block<4, 1>(0, 0) = currentAttitude.coeffs().normalized();
 
     // Updating velocity
     state.block<3, 1>(4, 0) = vkm;

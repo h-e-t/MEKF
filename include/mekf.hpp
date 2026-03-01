@@ -9,8 +9,17 @@
 
 #define grav_magnitude_residual .4
 
-using Eigen::Matrix3d, Eigen::MatrixXf, Eigen::Matrix, Eigen::Quaternionf, std::cout,
-    std::endl, Eigen::cos, Eigen::sin, Eigen::Matrix3f;
+using Eigen::Matrix3d; 
+using Eigen::MatrixXf;
+using Eigen::Matrix;
+using Eigen::Quaternionf;
+using std::cout;
+using std::endl;
+using Eigen::cos;
+using Eigen::sin;
+using Eigen::Matrix3f;
+
+
 // %==================================================================
 // % State Vector Definitions
 // %

@@ -3,13 +3,15 @@
 #include <ETL.hpp>
 
 #include <core/mekf_core.hpp>
+#include <iostream>
 #include <utilities/eigenCSVLogging.hpp>
 
 #include <cstdlib>
 #include <iomanip>
 #include <string>
 
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 // int main(int argc, char *argv[])
 int main()
@@ -19,9 +21,7 @@ int main()
     // Arg3  wether or not there is a head
 
     // ETL etl(argv[1], argv[2], argv[3]);
-    std::string path = "C:"
-                       "\\Users\\emmat\\Desktop\\PERSONAL\\RocketDevelopment\\MEKF\\src\\"
-                       "datasets\\Log_1209_221705.csv";
+    std::string path = "C:\\Users\\emmat\\Desktop\\Summer2025Projects\\MEKF\\logs\\Log_1209_221705.csv";
 
     ETL etl(path, ",", 0);
 
@@ -30,8 +30,8 @@ int main()
     //  MeasuredPosition MeasuredVelocity]
     MatrixXd dataset = etl.readCSV();
 
-    // CSVLogger statelogger("../logs/stateLog.csv");
-    // CSVLogger covlogger("../logs/covLog.csv");
+    CSVLogger statelogger("../logs/stateLog.csv");
+    CSVLogger covlogger("../logs/covLog.csv");
 
     // CSVLogger statelogger("../logs/GravUpdatestateLog.csv");
     // CSVLogger covlogger("../logs/GravUpdatecovLog.csv");
@@ -42,8 +42,8 @@ int main()
     // CSVLogger statelogger("../logs/propagation_grav_baro_mag_state.csv");
     // CSVLogger covlogger("../logs/propagation_grav_baro_mag_cov.csv");
 
-    CSVLogger statelogger("../logs/propagation_grav_baro_mag_gps_state.csv");
-    CSVLogger covlogger("../logs/propagation_grav_baro_mag_gps_cov.csv");
+    // CSVLogger statelogger("../logs/propagation_grav_baro_mag_gps_state.csv");
+    // CSVLogger covlogger("../logs/propagation_grav_baro_mag_gps_cov.csv");
 
     Matrix<float, 3, 1> gyroMeas;
     Matrix<float, 3, 1> accMeas;
@@ -71,22 +71,22 @@ int main()
 
         nav.propagate(gyroMeas, accMeas, dt);
 
-        nav.updateWithGravity(accMeas);
+        // nav.updateWithGravity(accMeas);
 
-        if ((i + 1) % 4 == 0)
-        {
-            nav.updateWithMagnetometer(magMeas);
-        }
+        // if ((i + 1) % 4 == 0)
+        // {
+        //     nav.updateWithMagnetometer(magMeas);
+        // }
 
-        if ((i + 1) % 15 == 0)
-        {
-            nav.updateWithBarometer(-posMeas(2));
-        }
+        // if ((i + 1) % 15 == 0)
+        // {
+        //     nav.updateWithBarometer(-posMeas(2));
+        // }
 
-        if ((i + 1) % 80 == 0)
-        {
-            nav.updateWithGPS(posMeas, velMeas);
-        }
+        // if ((i + 1) % 80 == 0)
+        // {
+        //     nav.updateWithGPS(posMeas, velMeas);
+        // }
     }
 
     cout << "Sensor sim complete" << endl;

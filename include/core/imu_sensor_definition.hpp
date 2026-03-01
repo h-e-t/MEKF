@@ -1,7 +1,8 @@
 #pragma once
 #include <Eigen/Core>
 
-using Eigen::MatrixXd, Eigen::Matrix;
+using Eigen::MatrixXd;
+using Eigen::Matrix;
 
 struct IMUSensorDefinition
 {
