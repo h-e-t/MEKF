@@ -1,4 +1,9 @@
 /build
+/build-host
+/managed_components
+/sdkconfig
+/sdkconfig.old
+/dependencies.lock
 /log
 /install
 .cache

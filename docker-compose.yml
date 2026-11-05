@@ -1,0 +1,10 @@
+services:
+  idf:
+    image: espressif/idf:release-v5.5
+    working_dir: /project
+    volumes:
+      - .:/project
+    environment:
+      HOME: /tmp
+      IDF_GIT_SAFE_DIR: /project
+    command: idf.py build
