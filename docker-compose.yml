@@ -1,13 +1,13 @@
 services:
   idf:
     image: espressif/idf:release-v5.5
-    working_dir: /project
+    working_dir: /workspaces/mekf
     volumes:
-      - .:/project
+      - .:/workspaces/mekf
       - idf-ccache:/cache
     environment:
       HOME: /tmp
-      IDF_GIT_SAFE_DIR: /project
+      IDF_GIT_SAFE_DIR: /workspaces/mekf
       IDF_CCACHE_ENABLE: "1"
       CCACHE_DIR: /cache/ccache
     command: idf.py build
