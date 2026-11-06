@@ -17,7 +17,7 @@ MEKF::MEKF(IMUSensorDefinition IMU)
     : IMU_(IMU), estimatorGravity(0, 0, 9.81),
       estimatorMagneticField(27.550, -2.4169, -16.0849)
 {
-    vehicleState_.state = Matrix<float, 16, 1>();
+    vehicleState_.state = Matrix<float, 16, 1>().setZero();
     vehicleState_.state << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
     vehicleState_.covariance.setZero();

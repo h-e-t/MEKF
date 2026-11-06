@@ -4,7 +4,13 @@ services:
     working_dir: /project
     volumes:
       - .:/project
+      - idf-ccache:/cache
     environment:
       HOME: /tmp
       IDF_GIT_SAFE_DIR: /project
+      IDF_CCACHE_ENABLE: "1"
+      CCACHE_DIR: /cache/ccache
     command: idf.py build
+
+volumes:
+  idf-ccache:
